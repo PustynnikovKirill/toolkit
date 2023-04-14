@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppRootStateType } from './store'
 import { initializeAppTC, RequestStatusType } from './app-reducer'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { Login } from 'features/Login/Login'
-import { logoutTC } from 'features/Login/auth-reducer'
+import { Login } from 'features/auth/Login'
+import { logoutTC } from 'features/auth/auth-reducer'
 import {
 	AppBar,
 	Button,
@@ -19,6 +19,7 @@ import {
 	Typography
 } from '@mui/material';
 import { Menu } from '@mui/icons-material'
+import {selectIsLoggedIn} from "features/auth/auth.selectors";
 
 type PropsType = {
 	demo?: boolean
@@ -27,7 +28,7 @@ type PropsType = {
 function App({demo = false}: PropsType) {
 	const status = useSelector<AppRootStateType, RequestStatusType>((state) => state.app.status)
 	const isInitialized = useSelector<AppRootStateType, boolean>((state) => state.app.isInitialized)
-	const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+	const isLoggedIn = useSelector(selectIsLoggedIn)
 	const dispatch = useDispatch<any>()
 
 	useEffect(() => {

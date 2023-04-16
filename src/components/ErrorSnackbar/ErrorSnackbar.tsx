@@ -4,6 +4,7 @@ import {AppRootStateType} from 'app/store'
 import { AlertProps, Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert';
 import {appAction} from "app/app-reducer";
+import {selectError} from "app/app.selector";
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 	props,
@@ -14,7 +15,7 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
 
 export function ErrorSnackbar() {
 
-    const error = useSelector<AppRootStateType, string | null>(state => state.app.error);
+    const error = useSelector(selectError)
     const dispatch = useDispatch()
 
     const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {

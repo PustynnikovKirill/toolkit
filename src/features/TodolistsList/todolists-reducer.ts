@@ -1,5 +1,5 @@
 import {todolistsAPI, TodolistType} from 'api/todolists-api'
-import {appAction, RequestStatusType} from 'app/app-reducer'
+import {appActions, RequestStatusType} from 'app/app-reducer'
 import {handleServerNetworkError} from 'utils/error-utils'
 import {AppThunk} from 'app/store';
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
@@ -58,11 +58,11 @@ export const todolistsActions = slice.actions
 // thunks
 export const fetchTodolistsTC = (): AppThunk => {
     return (dispatch) => {
-        dispatch(appAction.setAppStatus({status: 'loading'}))
+        dispatch(appActions.setAppStatus({status: 'loading'}))
         todolistsAPI.getTodolists()
             .then((res) => {
                 dispatch(todolistsActions.setTodolists({todolists:res.data}))
-                dispatch(appAction.setAppStatus({status: 'succeeded'}))
+                dispatch(appActions.setAppStatus({status: 'succeeded'}))
             })
             .catch(error => {
                 handleServerNetworkError(error, dispatch);
@@ -72,24 +72,24 @@ export const fetchTodolistsTC = (): AppThunk => {
 export const removeTodolistTC = (todolistId: string): AppThunk => {
     return (dispatch) => {
         //изменим глобальный статус приложения, чтобы вверху полоса побежала
-        dispatch(appAction.setAppStatus({status: 'loading'}))
+        dispatch(appActions.setAppStatus({status: 'loading'}))
         //изменим статус конкретного тудулиста, чтобы он мог задизеблить что надо
         dispatch(todolistsActions.changeTodolistEntityStatus({id:todolistId, entityStatus:'loading'}))
         todolistsAPI.deleteTodolist(todolistId)
             .then((res) => {
                 dispatch(todolistsActions.removeTodolist({id:todolistId}))
                 //скажем глобально приложению, что асинхронная операция завершена
-                dispatch(appAction.setAppStatus({status: 'succeeded'}))
+                dispatch(appActions.setAppStatus({status: 'succeeded'}))
             })
     }
 }
 export const addTodolistTC = (title: string): AppThunk => {
     return (dispatch) => {
-        dispatch(appAction.setAppStatus({status: 'loading'}))
+        dispatch(appActions.setAppStatus({status: 'loading'}))
         todolistsAPI.createTodolist(title)
             .then((res) => {
                 dispatch(todolistsActions.addTodolist({todolist:res.data.data.item}))
-                dispatch(appAction.setAppStatus({status: 'succeeded'}))
+                dispatch(appActions.setAppStatus({status: 'succeeded'}))
             })
     }
 }

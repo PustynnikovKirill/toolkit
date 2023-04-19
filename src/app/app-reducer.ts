@@ -28,7 +28,7 @@ const slice = createSlice({
 })
 
 export const appReducer = slice.reducer
-export const appAction = slice.actions
+export const appActions = slice.actions
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 
@@ -40,7 +40,7 @@ export const initializeAppTC = () => (dispatch: Dispatch) => {
 
         }
 
-        dispatch(appAction.setAppInitialized({isInitialized:true}));
+        dispatch(appActions.setAppInitialized({isInitialized:true}));
     })
 }
 

@@ -12,6 +12,8 @@ export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatc
     dispatch(appActions.setAppStatus({status: 'failed'}))
 }
 
+
+
 export const handleServerNetworkError = (e: unknown, dispatch: Dispatch) => {
     const err = e as Error | AxiosError<{ error: string }>
     if (axios.isAxiosError(err)) {

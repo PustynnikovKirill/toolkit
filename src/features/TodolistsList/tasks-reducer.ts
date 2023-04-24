@@ -8,8 +8,8 @@ import {
 } from 'api/todolists-api'
 import {handleServerAppError, handleServerNetworkError} from 'utils/error-utils'
 import {appActions} from "app/app-reducer";
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {todolistsActions} from "features/TodolistsList/todolists-reducer";
+import {createSlice} from "@reduxjs/toolkit";
+import {todolistsActions, todolistThunk} from "features/TodolistsList/todolists-reducer";
 import {clearTasksAndTodolists} from "common/actions/common.actions";
 import {createAppAsyncThunk} from "utils/create-app-async-thunk";
 
@@ -31,14 +31,6 @@ const removeTask = createAppAsyncThunk<removeTaskType,removeTaskType>
         return rejectWithValue(null)
     }
 })
-
-// export const _removeTaskTC = (taskId: string, todolistId: string): AppThunk => (dispatch) => {
-//     todolistsAPI.deleteTask(todolistId, taskId)
-//         .then(res => {
-//             const action = tasksAction.removeTask({taskId, todolistId})
-//             dispatch(action)
-//         })
-// }
 
 const fetchTasks = createAppAsyncThunk<{ tasks: TaskType[], todolistId: string }, string>
 ('tasks/fetchTasks', async (todolistId, thunkAPI) => {
@@ -62,6 +54,7 @@ const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArdType>
         dispatch(appActions.setAppStatus({status: 'loading'}))
         const res = await todolistsAPI.createTask(arg)
         if (res.data.resultCode === ResultCode.Success) {
+            dispatch(appActions.setAppStatus({status: 'succeeded'}))
             const task = res.data.data.item
             return {task}
         } else {
@@ -144,7 +137,7 @@ const slice = createSlice({
             .addCase(todolistsActions.removeTodolist, (state, action) => {
                 delete state[action.payload.id]
             })
-            .addCase(todolistsActions.setTodolists, (state, action) => {
+            .addCase(todolistThunk.fetchTodolists.fulfilled, (state, action) => {
                 action.payload.todolists.forEach((tl) => {
                     state[tl.id] = []
                 })
@@ -162,7 +155,6 @@ export const tasksThunks = {fetchTasks, addTask, updateTask, removeTask}
 
 
 
-// types
 export type UpdateDomainTaskModelType = {
     title?: string
     description?: string

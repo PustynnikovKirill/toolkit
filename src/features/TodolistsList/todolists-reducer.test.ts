@@ -1,7 +1,7 @@
 import {
     FilterValuesType,
     TodolistDomainType, todolistsActions,
-    todolistsReducer
+    todolistsReducer, todolistThunk
 } from './todolists-reducer'
 import {v1} from 'uuid'
 import {TodolistType} from 'api/todolists-api'
@@ -66,7 +66,7 @@ test('correct filter of todolist should be changed', () => {
 })
 test('todolists should be added', () => {
 
-    const action = todolistsActions.setTodolists({todolists:startState})
+    const action = todolistThunk.fetchTodolists.fulfilled({todolists:startState},'requestId')
 
     const endState = todolistsReducer([], action)
 

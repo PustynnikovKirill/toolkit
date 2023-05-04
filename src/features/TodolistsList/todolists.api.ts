@@ -1,7 +1,8 @@
 import { instance } from 'common/api/common.api';
 import { TaskPriorities, TaskStatuses } from 'common/enums/common.enums';
 import { UpdateDomainTaskModelType } from 'features/TodolistsList/tasks.reducer';
-import { ResponseType } from 'common/types/common.types';
+import {ResponseType} from "common/types";
+
 
 export const todolistsApi = {
 	getTodolists() {
@@ -20,7 +21,7 @@ export const todolistsApi = {
 		return instance.get<GetTasksResponse>(`todo-lists/${todolistId}/tasks`);
 	},
 	deleteTask(arg: RemoveTaskArgType) {
-		return instance.delete<ResponseType>(`todo-lists/${arg.todolistId}/tasks222/${arg.taskId}`);
+		return instance.delete<ResponseType>(`todo-lists/${arg.todolistId}/tasks/${arg.taskId}`);
 	},
 	createTask(arg: AddTaskArgType) {
 		return instance.post<ResponseType<{

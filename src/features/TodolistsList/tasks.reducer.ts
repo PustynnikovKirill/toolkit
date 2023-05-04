@@ -12,6 +12,7 @@ import {
 import { createAppAsyncThunk, handleServerAppError, handleServerNetworkError } from 'common/utils';
 import { ResultCode, TaskPriorities, TaskStatuses } from 'common/enums';
 import { clearTasksAndTodolists } from 'common/actions';
+import {thunkTryCatch} from "common/utils/thunk-try-catch";
 
 
 const fetchTasks = createAppAsyncThunk<{ tasks: TaskType[], todolistId: string }, string>
@@ -32,21 +33,16 @@ const fetchTasks = createAppAsyncThunk<{ tasks: TaskType[], todolistId: string }
 const addTask = createAppAsyncThunk<{ task: TaskType }, AddTaskArgType>
 ('tasks/addTask', async (arg, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
-	try {
-		dispatch(appActions.setAppStatus({status: 'loading'}))
+	return thunkTryCatch(thunkAPI, async ()=>{
 		const res = await todolistsApi.createTask(arg)
 		if (res.data.resultCode === ResultCode.Success) {
 			const task = res.data.data.item
-			dispatch(appActions.setAppStatus({status: 'succeeded'}))
 			return {task}
 		} else {
 			handleServerAppError(res.data, dispatch);
 			return rejectWithValue(null)
 		}
-	} catch (e) {
-		handleServerNetworkError(e, dispatch)
-		return rejectWithValue(null)
-	}
+	})
 })
 
 

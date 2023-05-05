@@ -8,16 +8,13 @@ import {thunkTryCatch} from "common/utils/thunk-try-catch";
 
 const fetchTodolists = createAppAsyncThunk<{ todolists: TodolistType[] }, void>
 ('todo/fetchTodolists', async (_, thunkAPI) => {
-	const {dispatch, rejectWithValue} = thunkAPI
-	try {
+	const {dispatch} = thunkAPI
+	return thunkTryCatch(thunkAPI, async()=>{
 		dispatch(appActions.setAppStatus({status: 'loading'}))
 		const res = await todolistsApi.getTodolists()
 		dispatch(appActions.setAppStatus({status: 'succeeded'}))
 		return {todolists: res.data}
-	} catch (e) {
-		handleServerNetworkError(e, dispatch)
-		return rejectWithValue(null)
-	}
+	})
 })
 
 const addTodolist = createAppAsyncThunk<{ todolist: TodolistType }, string>
@@ -37,7 +34,7 @@ const addTodolist = createAppAsyncThunk<{ todolist: TodolistType }, string>
 const removeTodolist = createAppAsyncThunk<{ id: string }, string>
 ('todo/removeTodolist', async (id, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
-	try {
+	return thunkTryCatch(thunkAPI, async ()=>{
 		dispatch(appActions.setAppStatus({status: 'loading'}))
 		dispatch(todolistsActions.changeTodolistEntityStatus({id, entityStatus: 'loading'}))
 		const res = await todolistsApi.deleteTodolist(id)
@@ -48,16 +45,13 @@ const removeTodolist = createAppAsyncThunk<{ id: string }, string>
 			handleServerAppError(res.data, dispatch);
 			return rejectWithValue(null)
 		}
-	} catch (e) {
-		handleServerNetworkError(e, dispatch)
-		return rejectWithValue(null)
-	}
+	})
 })
 
 const changeTodolistTitle = createAppAsyncThunk<UpdateTodolistTitleArgType, UpdateTodolistTitleArgType>
 ('todo/changeTodolistTitle', async (arg, thunkAPI) => {
 	const {dispatch, rejectWithValue} = thunkAPI
-	try {
+	return thunkTryCatch(thunkAPI, async ()=>{
 		dispatch(appActions.setAppStatus({status: 'loading'}))
 		const res = await todolistsApi.updateTodolist(arg)
 		if (res.data.resultCode === ResultCode.Success) {
@@ -67,10 +61,7 @@ const changeTodolistTitle = createAppAsyncThunk<UpdateTodolistTitleArgType, Upda
 			handleServerAppError(res.data, dispatch);
 			return rejectWithValue(null)
 		}
-	} catch (e) {
-		handleServerNetworkError(e, dispatch)
-		return rejectWithValue(null)
-	}
+	})
 })
 
 const initialState: TodolistDomainType[] = []

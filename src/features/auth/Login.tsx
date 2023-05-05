@@ -10,8 +10,8 @@ import {LoginParamsType} from "features/auth/auth.api";
 import {ResponseType} from "common/types";
 
 export const Login = () => {
-    const dispatch = useAppDispatch()
 
+    const dispatch = useAppDispatch()
     const isLoggedIn = useSelector(selectIsLoggedIn)
 
     const formik = useFormik({

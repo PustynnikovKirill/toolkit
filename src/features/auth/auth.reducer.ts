@@ -1,8 +1,7 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
-import {appActions} from 'app/app.reducer';
+import {createSlice} from '@reduxjs/toolkit';
 import {authAPI, LoginParamsType} from 'features/auth/auth.api';
 import {clearTasksAndTodolists} from 'common/actions';
-import {createAppAsyncThunk, handleServerAppError, handleServerNetworkError} from 'common/utils';
+import {createAppAsyncThunk, handleServerAppError} from 'common/utils';
 import {thunkTryCatch} from "common/utils/thunk-try-catch";
 
 
@@ -20,6 +19,7 @@ const login = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>
         }
     })
 })
+
 
 const logout = createAppAsyncThunk<{ isLoggedIn: boolean }, void>
 ('auth/logout', async (_, thunkAPI) => {
